@@ -1,22 +1,22 @@
 #!/bin/bash -e
 # @author AT
 
-_configure() {
+_configure_ios() {
 	# Configure
 	if [ "x${DONT_CONFIGURE}" == "x" ]; then
 		echo "Configuring ${PLATFORM}-${ARCH}..."
-    CONFIGURE_OPTIONS=""
-    vercomp ${OPENSSL_VERSION} "1.1"
-    case $? in
-        # <
-        2) CONFIGURE_OPTIONS="no-app";;
-        *) ;;
-    esac
+    	CONFIGURE_OPTIONS=""
+    	vercomp ${OPENSSL_VERSION} "1.1"
+	    case $? in
+	        # <
+	        2) CONFIGURE_OPTIONS="no-app";;
+	        *) ;;
+	    esac
 		(cd "${SRC_DIR}"; CROSS_TOP="${CROSS_TOP}" CROSS_SDK="${CROSS_SDK}" CC="${CC}" ./Configure ${COMPILER} ${CONFIGURE_OPTIONS} --openssldir="${DST_DIR}" --prefix="${DST_DIR}" > "${LOG_FILE}" 2>&1)
 	fi
 }
 
-_build() {
+_build_ios() {
 	# Build
 	if [ "x${DONT_BUILD}" == "x" ]; then
 		echo "Building ${PLATFORM}-${ARCH}..."
@@ -87,7 +87,7 @@ build_ios() {
 
     file_setup
 		unarchive
-		_configure
+		_configure_ios
 
 		# Patch Makefile
     if [ "${ARCH}" == "x86_64" ]; then
@@ -105,7 +105,7 @@ build_ios() {
       sed -i'.bak' "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "${SRC_DIR}/include/openssl/opensslv.h"
     fi
 
-		_build
+		_build_ios
 	done
 }
 

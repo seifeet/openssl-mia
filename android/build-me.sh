@@ -27,7 +27,7 @@ fi
 # Android API 23 (NDK_DIR/platforms)
 #
 
-NDK_DIR=~/Projects/android/android-ndk-r16b
+NDK_DIR=~/Projects/android/android-ndk-r17c
 
 OPENSSL_TARGET_API=23
 OPENSSL_GCC_VERSION=4.9
@@ -36,8 +36,8 @@ OPENSSL_GCC_VERSION=4.9
 # 1.0.2o
 # 1.1.0h
 # 1.1.0i
-# 1.1.1-pre8
-OPENSSL_VERSION=1.1.0h
+# 1.1.1
+OPENSSL_VERSION=1.1.1
 OPENSSL_VERSION_NUM=${OPENSSL_VERSION:0:5}
 OPENSSL_NAME="openssl-${OPENSSL_VERSION}"
 OPENSSL_FILE="${OPENSSL_NAME}.tar.gz"

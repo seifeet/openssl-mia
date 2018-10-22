@@ -17,14 +17,14 @@
 # 1.0.2o
 # 1.1.0h
 # 1.1.0i
-# 1.1.1-pre8
-OPENSSL_VERSION=1.1.1-pre8
-OSX_SDK=10.13
+# 1.1.1
+OPENSSL_VERSION=1.1.1
+OSX_SDK=10.14
 MIN_OSX=10.6
-IOS_SDK=11.4
+IOS_SDK=12.0
 
 BUILD_iOS=true
-BUILD_MacOS=false
+BUILD_MacOS=true
 CREATE_TAR_FILE=true
 
 # These values are used to avoid version detection

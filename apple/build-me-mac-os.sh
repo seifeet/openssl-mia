@@ -1,22 +1,22 @@
 #!/bin/bash -e
 # @author AT
 
-_configure() {
+_configure_osx() {
 	# Configure
 	if [ "x${DONT_CONFIGURE}" == "x" ]; then
 		echo "Configuring ${PLATFORM}-${ARCH}..."
-    CONFIGURE_OPTIONS=""
-    vercomp ${OPENSSL_VERSION} "1.1"
-    case $? in
-        # <
-        2) CONFIGURE_OPTIONS="no-app";;
-        *) ;;
-    esac
+	    CONFIGURE_OPTIONS=""
+	    vercomp ${OPENSSL_VERSION} "1.1"
+	    case $? in
+	        # <
+	        2) CONFIGURE_OPTIONS="no-app";;
+	        *) ;;
+	    esac
 		(cd "${SRC_DIR}"; CROSS_TOP="${CROSS_TOP}" CROSS_SDK="${CROSS_SDK}" CC="${CC}" ./Configure ${COMPILER} ${CONFIGURE_OPTIONS} --openssldir="${DST_DIR}" --prefix="${DST_DIR}" > "${LOG_FILE}" 2>&1)
 	fi
 }
 
-_build() {
+_build_osx() {
 	# Build
 	if [ "x${DONT_BUILD}" == "x" ]; then
 		echo "Building ${PLATFORM}-${ARCH}..."
@@ -43,23 +43,23 @@ build_osx() {
 		CROSS_SDK="${PLATFORM}${OSX_SDK}.sdk"
 		CC="${DEVELOPER_DIR}/usr/bin/gcc -arch ${ARCH}"
 
-    file_setup
+		file_setup
 		unarchive
-		_configure
+		_configure_osx
 
 		# Patch Makefile
 		sed -i'.bak' "s/^CFLAG= -/CFLAG=  -mmacosx-version-min=${MIN_OSX} -/" "${SRC_DIR}/Makefile"
 		# Patch versions
-    # some headers have moved starting 1.1
-    if [[ ${OPENSSL_VERSION:0:3} < 1.1 ]]; then
-      sed -i'.bak' "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "${SRC_DIR}/crypto/opensslv.h"
-  		sed -i'.bak' "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "${SRC_DIR}/crypto/opensslv.h"
-    else
-      sed -i'.bak' "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "${SRC_DIR}/include/openssl/opensslv.h"
-  		sed -i'.bak' "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "${SRC_DIR}/include/openssl/opensslv.h"
-    fi
+		# some headers have moved starting 1.1
+		if [[ ${OPENSSL_VERSION:0:3} < 1.1 ]]; then
+		  sed -i'.bak' "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "${SRC_DIR}/crypto/opensslv.h"
+				sed -i'.bak' "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "${SRC_DIR}/crypto/opensslv.h"
+		else
+		  sed -i'.bak' "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "${SRC_DIR}/include/openssl/opensslv.h"
+				sed -i'.bak' "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "${SRC_DIR}/include/openssl/opensslv.h"
+		fi
 
-    _build
+		_build_osx
 	done
 }
 
